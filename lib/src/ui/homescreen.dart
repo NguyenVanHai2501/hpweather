@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:home_widget/home_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:weather/src/Contract/cityWeatherViewContact.dart';
 import 'package:weather/src/Contract/historyInforViewContract.dart';
@@ -21,6 +22,50 @@ class _MyHomePageState extends State<MyHomePage> implements CityWeatherViewContr
   dynamic historys;
   late CityWeatherPresenter _cityWeatherPresenter;
   late HistoryInforPresenter _historyInforPresenter;
+  dynamic temp = "";
+  dynamic cityName = "";
+  dynamic icon = "";
+
+  void loadData() async {
+    await HomeWidget.getWidgetData<String>('_cityName', defaultValue: "")
+        .then((value) {
+      cityName = value!;
+    });
+    await HomeWidget.getWidgetData<String>('_icon', defaultValue: "")
+        .then((value) {
+      icon = value!;
+    });
+    await HomeWidget.getWidgetData<String>('_temp', defaultValue: "")
+        .then((value) {
+      temp = value!;
+    });
+
+    setState(() {});
+  }
+
+  Future<void> updateAppWidget() async {
+    await HomeWidget.saveWidgetData<String>('_cityName', cityName);
+    await HomeWidget.saveWidgetData<String>('_icon', icon);
+    await HomeWidget.saveWidgetData<String>('_temp', temp);
+
+    await HomeWidget.updateWidget(
+        name: 'HomeScreenWidgetProvider', iOSName: 'HomeScreenWidgetProvider');
+  }
+
+  void _incrementCounter() {
+    setState(() {
+      if (cityName == "HaNoi") {
+        cityName = "Ho Chi Minh City";
+        icon = "HCM_icon";
+        temp = "18";
+      } else {
+        cityName = "HaNoi";
+        icon = "HaNoi_icon";
+        temp = "20";
+      }
+    });
+    updateAppWidget();
+  }
 
   @override
   void initState() {
@@ -34,6 +79,9 @@ class _MyHomePageState extends State<MyHomePage> implements CityWeatherViewContr
     _cityWeatherPresenter.loadCityWeatherFromLocation();
 
     super.initState();
+
+    HomeWidget.widgetClicked.listen((Uri? uri) => loadData());
+    loadData(); // This will load data from widget every time app is opened
   }
 
 
@@ -256,10 +304,12 @@ class _MyHomePageState extends State<MyHomePage> implements CityWeatherViewContr
               ),
               Expanded(
                 flex: 2
-                ,child: Container(
+                ,child: ElevatedButton(
+                onPressed: _incrementCounter,
+                child: Text('$cityName'),
+              )
 
               ),
-              )
             ],
       )
     );
