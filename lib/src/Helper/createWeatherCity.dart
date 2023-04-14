@@ -63,16 +63,16 @@ class CreateWeatherCity {
     if (PM25 == null) {
       return "No Forecast";
     }
-    String result = "Hazardous";
+    String result = "Nguy hại";
     double air = PM25;
     if (air <= 12) {
-      result = "Good";
+      result = "Tốt";
     } else if (air < 35.5){
-      result = "Moderate";
+      result = "Trung bình";
     } else if (air <= 55.5){
-      result = "Unhealthy for Sensitive Groups";
+      result = "Kém";
     } else if (air < 35.5){
-      result = "Unhealthy";
+      result = "Xấu";
     }
     return result;
   }

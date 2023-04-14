@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:another_flutter_splash_screen/another_flutter_splash_screen.dart';
 import 'package:home_widget/home_widget.dart';
+import 'package:weather/src/ui/detailpage.dart';
 import 'package:weather/src/ui/homescreen.dart';
 
 void main() {
@@ -43,7 +44,7 @@ class MyApp extends StatelessWidget {
           gifPath: 'lib/Input/weather-icon-gif-23.gif',
           gifWidth: 300,
           gifHeight: 300,
-          defaultNextScreen: const MyHomePage(),
+          defaultNextScreen: const DetailPage(),
           backgroundColor: Colors.white,
           duration: const Duration(milliseconds: 4000),
 
