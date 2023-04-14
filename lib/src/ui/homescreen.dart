@@ -154,7 +154,7 @@ class _MyHomePageState extends State<MyHomePage> implements CityWeatherViewContr
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       children: <Widget>[
                                         Container(
-                                          padding: EdgeInsets.only(top: 10, left: 20, right: 20, bottom: 10),
+                                          padding: EdgeInsets.only(top: 0, left: 20, right: 20, bottom: 10),
                                           child: Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: <Widget>[
@@ -165,15 +165,15 @@ class _MyHomePageState extends State<MyHomePage> implements CityWeatherViewContr
                                                       fontSize: 30),
                                                 ),
                                               ),
-                                              Center(
-                                                child: Text('${city?.weatherCurrent.tinhtrang}', //bỏ data như kiểu trời u ám, trời nắng các th
-                                                  style: const TextStyle(
-                                                      color: Colors.black54,
-                                                      fontSize: 14,
-                                                      fontFamily: 'flutterfonts'
-                                                  ),
-                                                ),
-                                              ),
+                                              // Center(
+                                              //   child: Text('${city?.weatherCurrent.tinhtrang}', //bỏ data như kiểu trời u ám, trời nắng các th
+                                              //     style: const TextStyle(
+                                              //         color: Colors.black54,
+                                              //         fontSize: 14,
+                                              //         fontFamily: 'flutterfonts'
+                                              //     ),
+                                              //   ),
+                                              // ),
                                               Center(
                                                 child: Text('${city?.cityName}',// bỏ data thành phố vào đây
                                                   style: const TextStyle(
@@ -247,6 +247,49 @@ class _MyHomePageState extends State<MyHomePage> implements CityWeatherViewContr
                                                 children: <Widget>[
                                                   Icon(Icons.cloud),
                                                   Text('data',
+                                                    style: Theme
+                                                        .of(context)
+                                                        .textTheme
+                                                        .caption
+                                                        ?.copyWith(
+                                                        fontSize: 18,
+                                                        fontWeight: FontWeight.bold,
+                                                        color: Colors.black54,
+                                                        fontFamily: 'flutterfont'
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            Container(
+                                              padding: EdgeInsets.only(right: 40, top: 20),
+                                              child: Column(
+                                                children: <Widget>[
+                                                  Text('${city?.weatherCurrent.khongkhi}', //data kk
+                                                    style: Theme
+                                                        .of(context)
+                                                        .textTheme
+                                                        .caption
+                                                        ?.copyWith(
+                                                        fontSize: 18,
+                                                        fontWeight: FontWeight.bold,
+                                                        color: Colors.black54,
+                                                        fontFamily: 'flutterfont'
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Container(
+                                              padding: EdgeInsets.only(left: 40, top: 20),
+                                              child: Column(
+                                                children: <Widget>[
+                                                  Text('${city?.weatherCurrent.tinhtrang}', //data gió
                                                     style: Theme
                                                         .of(context)
                                                         .textTheme
