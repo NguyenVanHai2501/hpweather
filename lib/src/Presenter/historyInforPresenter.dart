@@ -8,7 +8,6 @@ class HistoryInforPresenter extends Presenter<HistoryInforViewContract> {
 
   void loadAllHistory() {
     historyInforService.getAllHistory().then((allHistory) {
-      print(allHistory.toString());
       getView().onLoadAllHistoryComplete(allHistory);
     });
   }

@@ -1,4 +1,3 @@
-
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -10,15 +9,18 @@ import 'package:weather/src/Model/cityWeatherModel.dart';
 import 'package:weather/src/Model/historyInforModel.dart';
 import 'package:weather/src/Presenter/cityWeatherPresenter.dart';
 import 'package:weather/src/Presenter/historyInforPresenter.dart';
+import 'package:weather/src/ui/detailpage.dart';
+import 'package:weather/src/ui/weatherItem.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
+
   @override
   State<MyHomePage> createState() => _MyHomePageState();
-
 }
 
-class _MyHomePageState extends State<MyHomePage> implements CityWeatherViewContract, HistoryInforViewContract{
+class _MyHomePageState extends State<MyHomePage>
+    implements CityWeatherViewContract, HistoryInforViewContract {
   late bool _isLoading;
   dynamic city;
   dynamic historys;
@@ -57,17 +59,11 @@ class _MyHomePageState extends State<MyHomePage> implements CityWeatherViewContr
         name: 'HomeScreenWidgetProvider', iOSName: 'HomeScreenWidgetProvider');
   }
 
-  void _incrementCounter() {
+  void _incrementCounter(String iCity, String iIcon, String iTemp) {
     setState(() {
-      if (cityName == "HaNoi") {
-        cityName = "Ho Chi Minh City";
-        icon = "HCM_icon";
-        temp = "18";
-      } else {
-        cityName = "HaNoi";
-        icon = "HaNoi_icon";
-        temp = "20";
-      }
+        cityName = iCity;
+        icon = iIcon;
+        temp = iTemp;
     });
     updateAppWidget();
   }
@@ -103,603 +99,419 @@ class _MyHomePageState extends State<MyHomePage> implements CityWeatherViewContr
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('EEEE, MMMM d, y').format(now);
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body:
-        _isLoading
+        resizeToAvoidBottomInset: false,
+        body: _isLoading
             ? const Center(
-            child: Column (
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon (
-                    Icons.place,
-                    size: 128,
-                    color: Colors.redAccent
-                ),
-                CircularProgressIndicator()
-              ],
-            )
-        )
-          :Column(
-            children: <Widget>[
-              Expanded(flex: 1,
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: Colors.cyan,
-                      image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: AssetImage('lib/Input/${city?.weatherCurrent.image}',)
-                      ),
-                      borderRadius: const BorderRadius.only(
-                          bottomLeft: Radius.circular(25),
-                          bottomRight: Radius.circular(25)
-                      )
-                  ),
-                  child: Stack(
-                    children: <Widget>[
-                      Container(
-                        child: AppBar(
-                          backgroundColor: Colors.transparent,
-                          elevation: 0,
-                          leading: IconButton(onPressed: () {},
-                              icon: const Icon(Icons.menu,
-                                color: Colors.white,)
-                          ),
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.only(
-                          top: 80,
-                          left: 20,
-                          right: 20,
-                        ),
-                        child: TextField(
-                          onChanged: (value) {
-                            // fetchWeatherData(value);
-                          },
-                          style: const TextStyle(
-                              color: Colors.white
-                          ),
-                          textInputAction: TextInputAction.search,
-                          onSubmitted: (value) {
-                            _cityWeatherPresenter.loadCityWeather(value);
-                          },
-                          decoration: InputDecoration(
-                            suffixIcon: const Icon(Icons.search, color: Colors.white,),
-                            hintStyle: const TextStyle(
-                                color: Colors.white
-                            ),
-                            hintText: 'Search'.toUpperCase(),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: const BorderSide(color: Colors.white)
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: const BorderSide(color: Colors.white)
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: const BorderSide(color: Colors.white)
-                            ),
-                          ),
-                        ),
-                      ),
-                      Align(
-                        alignment: const Alignment(0.0, 1.27),
-                        child: SizedBox(
-                          height: 10,
-                          width: 10,
-                          child: OverflowBox(
-                            minWidth: 0.0,
-                            maxWidth: MediaQuery.of(context).size.width,
-                            minHeight: 0.0,
-                            maxHeight: (MediaQuery.of(context).size.height / 2.85),
-                            child: Stack(
-                              children: <Widget>[
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 16.8),
-                                  width: double.infinity,
-                                  height: double.infinity,
-                                  child: Card(
-                                    color: Colors.white,
-                                    elevation: 5,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(20)
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: <Widget>[
-                                        Container(
-                                          padding: EdgeInsets.only(top: 0, left: 20, right: 20, bottom: 10),
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: <Widget>[
-                                              Center(
-                                                child: Text('${city?.weatherCurrent.nhietdo}' + "℃", // bỏ data nhiệt độ vào đây
-                                                  style: const TextStyle(color: Colors.black54,
-                                                      fontFamily: 'flutterfonts',
-                                                      fontSize: 30),
-                                                ),
-                                              ),
-                                              // Center(
-                                              //   child: Text('${city?.weatherCurrent.tinhtrang}', //bỏ data như kiểu trời u ám, trời nắng các th
-                                              //     style: const TextStyle(
-                                              //         color: Colors.black54,
-                                              //         fontSize: 14,
-                                              //         fontFamily: 'flutterfonts'
-                                              //     ),
-                                              //   ),
-                                              // ),
-                                              Center(
-                                                child: Text('${city?.cityName}',// bỏ data thành phố vào đây
-                                                  style: const TextStyle(
-                                                      color: Colors.black54,
-                                                      fontSize: 18,
-                                                      fontWeight: FontWeight.bold,
-                                                      fontFamily: 'flutterfonts'
-                                                  ),
-                                                ),
-                                              ),
-                                              Center(
-                                                child: Text(formattedDate,
-                                                  style: const TextStyle(
-                                                      color: Colors.black54,
-                                                      fontSize: 14,
-                                                      fontFamily: 'flutterfonts'
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-
-                                        const Divider(),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          children: <Widget>[
-                                            Container(
-                                              padding: EdgeInsets.only(left: 50),
-                                              child: Column(
-                                                children: <Widget>[
-                                                  Icon(Icons.wind_power),
-                                                  Text('${city?.weatherCurrent.gio}', //data gió
-                                                  style: Theme
-                                                      .of(context)
-                                                      .textTheme
-                                                      .caption
-                                                      ?.copyWith(
-                                                      fontSize: 18,
-                                                      fontWeight: FontWeight.bold,
-                                                      color: Colors.black54,
-                                                      fontFamily: 'flutterfont'
-                                                  ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Container(
-                                              padding: EdgeInsets.only(left: 80),
-                                              child: Column(
-                                                children: <Widget>[
-                                                  Icon(Icons.water_drop),
-                                                  Text('${city?.weatherCurrent.doam}', // data ẩm
-                                                    style: Theme
-                                                        .of(context)
-                                                        .textTheme
-                                                        .caption
-                                                        ?.copyWith(
-                                                        fontSize: 18,
-                                                        fontWeight: FontWeight.bold,
-                                                        color: Colors.black54,
-                                                        fontFamily: 'flutterfont'
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Container(
-                                              padding: EdgeInsets.only(left: 87),
-                                              child: Column(
-                                                children: <Widget>[
-                                                  Icon(Icons.cloud),
-                                                  Text('data',
-                                                    style: Theme
-                                                        .of(context)
-                                                        .textTheme
-                                                        .caption
-                                                        ?.copyWith(
-                                                        fontSize: 18,
-                                                        fontWeight: FontWeight.bold,
-                                                        color: Colors.black54,
-                                                        fontFamily: 'flutterfont'
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: <Widget>[
-                                            Container(
-                                              padding: EdgeInsets.only(right: 40, top: 20),
-                                              child: Column(
-                                                children: <Widget>[
-                                                  Text('${city?.weatherCurrent.khongkhi}', //data kk
-                                                    style: Theme
-                                                        .of(context)
-                                                        .textTheme
-                                                        .caption
-                                                        ?.copyWith(
-                                                        fontSize: 18,
-                                                        fontWeight: FontWeight.bold,
-                                                        color: Colors.black54,
-                                                        fontFamily: 'flutterfont'
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Container(
-                                              padding: EdgeInsets.only(left: 40, top: 20),
-                                              child: Column(
-                                                children: <Widget>[
-                                                  Text('${city?.weatherCurrent.tinhtrang}', //data gió
-                                                    style: Theme
-                                                        .of(context)
-                                                        .textTheme
-                                                        .caption
-                                                        ?.copyWith(
-                                                        fontSize: 18,
-                                                        fontWeight: FontWeight.bold,
-                                                        color: Colors.black54,
-                                                        fontFamily: 'flutterfont'
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        // Row(
-                                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        //   children: <Widget>[
-                                        //     Container(
-                                        //       padding: const EdgeInsets.only(left: 50, top: 0),
-                                        //       child: Column(
-                                        //         children: <Widget>[
-                                        //           // Text('${city?.weatherCurrent.tinhtrang}', //bỏ data như kiểu trời u ám, trời nắng các th
-                                        //           //   style: const TextStyle(
-                                        //           //       color: Colors.black54,
-                                        //           //       fontSize: 14,
-                                        //           //       fontFamily: 'flutterfonts'
-                                        //           //   ),
-                                        //           // ),
-                                        //           //const SizedBox(height: 3,),
-                                        //           // Text('${city?.weatherCurrent.nhietdo}' + "℃", // bỏ data nhiệt độ vào đây
-                                        //           //   style: const TextStyle(color: Colors.black54,
-                                        //           //       fontFamily: 'flutterfonts',
-                                        //           //       fontSize: 30),
-                                        //           // ),
-                                        //           Text('Air Quality: ', // bỏ data chất lg ko khí vào đây
-                                        //             style: const TextStyle(color: Colors.black54,
-                                        //                 fontFamily: 'flutterfonts',
-                                        //                 fontSize: 14),
-                                        //           )
-                                        //         ],
-                                        //       ),
-                                        //     ),
-                                        //     Container(
-                                        //       padding: const EdgeInsets.only(right: 20),
-                                        //       child: Column(
-                                        //         mainAxisAlignment: MainAxisAlignment.center,
-                                        //         children: <Widget>[
-                                        //           Image.network(
-                                        //             'https:${city?.weatherCurrent.icon}',
-                                        //             width: 100,
-                                        //           height: 100,
-                                        //           fit: BoxFit.fill,
-                                        //           ),
-                                        //           // Container(
-                                        //           //   width: 120,
-                                        //           //   height: 120,
-                                        //           //   decoration: BoxDecoration(
-                                        //           //     image: DecorationImage(fit: BoxFit.cover,
-                                        //           //       image: Image.network('http:${data?.weather[0].icon}'),
-                                        //           //     ),
-                                        //           //   ),
-                                        //           // ),
-                                        //           Container(
-                                        //             child: Text('Wind Power: '+'${city?.weatherCurrent.gio}' + "Kph", // bỏ data gio vào đây
-                                        //               style: const TextStyle(
-                                        //                   color: Colors.black54,
-                                        //                   fontFamily: 'flutterfonts',
-                                        //                   fontSize: 12,
-                                        //                   fontWeight: FontWeight.bold
-                                        //               ),
-                                        //             ),
-                                        //           ),
-                                        //         ],
-                                        //       ),
-                                        //     ),
-                                        //   ],
-                                        // ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 2,
-                child: Stack(
+                child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.place, size: 128, color: Colors.redAccent),
+                  CircularProgressIndicator()
+                ],
+              ))
+            : Column(
                 children: <Widget>[
-                  Padding(padding: EdgeInsets.symmetric(horizontal: 15),
+                  Expanded(
+                    flex: 1,
                     child: Container(
-                      padding: EdgeInsets.only(top: 200),
-                      child: Align(
-                        alignment: Alignment.topLeft,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Container(
-                              child: Text('today'.toUpperCase(),
-                                style: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .caption
-                                    ?.copyWith(
-                                    fontSize: 16,
-                                    fontFamily: 'flutterfonts',
-                                    color: Colors.black54,
-                                    fontWeight: FontWeight.bold
+                      decoration: BoxDecoration(
+                          color: Colors.cyan,
+                          image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: AssetImage(
+                                'lib/Input/${city?.weatherCurrent.image}',
+                              )),
+                          borderRadius: const BorderRadius.only(
+                              bottomLeft: Radius.circular(25),
+                              bottomRight: Radius.circular(25))),
+                      child: Stack(
+                        children: <Widget>[
+                          Container(
+                            padding: const EdgeInsets.only(
+                              top: 80,
+                              left: 20,
+                              right: 20,
+                            ),
+                            child: TextField(
+                              onChanged: (value) {
+                                // fetchWeatherData(value);
+                              },
+                              style: const TextStyle(color: Colors.white),
+                              textInputAction: TextInputAction.search,
+                              onSubmitted: (value) {
+                                _cityWeatherPresenter.loadCityWeather(value);
+                              },
+                              decoration: InputDecoration(
+                                suffixIcon: const Icon(
+                                  Icons.search,
+                                  color: Colors.white,
                                 ),
+                                hintStyle: const TextStyle(color: Colors.white),
+                                hintText: 'Search'.toUpperCase(),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide:
+                                        const BorderSide(color: Colors.white)),
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide:
+                                        const BorderSide(color: Colors.white)),
+                                enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide:
+                                        const BorderSide(color: Colors.white)),
                               ),
                             ),
-                            Container(
-                              height: 140,
-                              padding: EdgeInsets.only(top: 15),
-                              child: ListView.separated(
-                                  physics: BouncingScrollPhysics(),
-                                  scrollDirection: Axis.horizontal,
-                                  itemBuilder: (BuildContext context, index) {
-                                    index =
-                                    10; // cái để bỏ vào mảng data như kiểu data[index]
-                                    return Container(
-                                      width: 140,
-                                      height: 150,
+                          ),
+                          Align(
+                            alignment: const Alignment(0.0, 1.27),
+                            child: SizedBox(
+                              height: 10,
+                              // width: 10,
+                              child: OverflowBox(
+                                minWidth: 0.0,
+                                maxWidth: MediaQuery.of(context).size.width,
+                                minHeight: 0.0,
+                                maxHeight:
+                                    (MediaQuery.of(context).size.height / 1.4),
+                                child: Stack(
+                                  children: <Widget>[
+                                    Container(
+                                      // padding: const EdgeInsets.symmetric(
+                                      //     horizontal: 16.8, vertical: 50),
+                                      padding: EdgeInsets.only(
+                                          top: 180,
+                                          right: 20,
+                                          left: 20,
+                                          bottom: 20),
+                                      width: double.infinity,
+                                      height: double.infinity,
                                       child: Card(
+                                        color: Colors.white,
+                                        elevation: 5,
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                              15),
-                                        ),
-                                        child: Container(
-                                          child: Column(
-                                            mainAxisAlignment: MainAxisAlignment
-                                                .center,
-                                            children: <Widget>[
-                                              Text("data", // bỏ dữ liệu giờ
-                                                style: Theme
-                                                    .of(context)
-                                                    .textTheme
-                                                    .caption
-                                                    ?.copyWith(
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.black54,
-                                                    fontFamily: 'flutterfont'
-                                                ),
-                                              ),
-                                              Text(
-                                                'nhiệt độ', // bỏ data nhiệt độ
-                                                style: Theme
-                                                    .of(context)
-                                                    .textTheme
-                                                    .caption
-                                                    ?.copyWith(
-                                                    fontSize: 18,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.black54,
-                                                    fontFamily: 'flutterfont'
-                                                ),
-                                              ),
-                                              Container(
-                                                width: 50,
-                                                height: 50,
-                                                decoration: const BoxDecoration(
-                                                  image: DecorationImage(
-                                                    image: AssetImage(
-                                                        'lib/Input/night.jpg'),
-                                                    // chỗ này chỉnh ảnh sao cho giống với dữ liệu mô tả
-                                                    fit: BoxFit.fill,
-                                                  ),
-                                                ),
-                                              ),
-                                              Text('data',
-                                                // bỏ dữ liệu mô tả vào đây, giống kiểu trời mưa, hay nắng hay mây
-                                                style: Theme
-                                                    .of(context)
-                                                    .textTheme
-                                                    .caption
-                                                    ?.copyWith(
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.black54,
-                                                    fontFamily: 'flutterfont'
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  separatorBuilder: (BuildContext context,
-                                      index) =>
-                                      VerticalDivider(
-                                        color: Colors.transparent,
-                                        width: 5,
-                                      ),
-                                  itemCount: 10 // bỏ data số lượng kiểu length của mảng dữ liệu thời tiết nhiệt độ
-                              ),
-                            ),
-                            Container(
-                              padding: EdgeInsets.only(top: 20),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment
-                                    .spaceBetween,
-                                children: <Widget>[
-                                  Text('Forcast next 7 days'.toUpperCase(),
-                                    style: Theme
-                                        .of(context)
-                                        .textTheme
-                                        .caption
-                                        ?.copyWith(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black54,
-                                        fontFamily: 'flutterfont'
-                                    ),
-                                  ),
-                                  Icon(Icons.next_plan_outlined,
-                                    color: Colors.black45,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SingleChildScrollView(
-                              //scrollDirection: Axis.horizontal,
-                              child: Container(
-                                width: MediaQuery
-                                    .of(context)
-                                    .size
-                                    .width,
-                                height: 120,
-                                // margin: EdgeInsets.all(10),
-                                // padding: EdgeInsets.all(15),
-                                // decoration: BoxDecoration(
-                                //   color: Colors.black12,
-                                //   borderRadius: BorderRadius.circular(20),
-                                // ),
-                                child: ListView.separated(
-                                    physics: BouncingScrollPhysics(),
-                                    scrollDirection: Axis.horizontal,
-                                    itemBuilder: (BuildContext context, index) {
-                                      index =
-                                      10; // cái để bỏ vào mảng data như kiểu data[index]
-                                      return Container(
-                                        width: 140,
-                                        height: 150,
-                                        child: Card(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                                15),
-                                          ),
-                                          child: Container(
-                                            child: Column(
-                                              mainAxisAlignment: MainAxisAlignment
-                                                  .center,
-                                              children: <Widget>[
-                                                Text("data", // bỏ dữ liệu giờ
-                                                  style: Theme
-                                                      .of(context)
-                                                      .textTheme
-                                                      .caption
-                                                      ?.copyWith(
-                                                      fontSize: 16,
-                                                      fontWeight: FontWeight.bold,
-                                                      color: Colors.black54,
-                                                      fontFamily: 'flutterfont'
-                                                  ),
-                                                ),
-                                                Text(
-                                                  'nhiệt độ', // bỏ data nhiệt độ
-                                                  style: Theme
-                                                      .of(context)
-                                                      .textTheme
-                                                      .caption
-                                                      ?.copyWith(
-                                                      fontSize: 18,
-                                                      fontWeight: FontWeight.bold,
-                                                      color: Colors.black54,
-                                                      fontFamily: 'flutterfont'
-                                                  ),
-                                                ),
-                                                Container(
-                                                  width: 50,
-                                                  height: 50,
-                                                  decoration: BoxDecoration(
-                                                    image: DecorationImage(
-                                                      image: AssetImage(
-                                                          'lib/Input/morning.png'),
-                                                      // chỗ này chỉnh ảnh sao cho giống với dữ liệu mô tả
-                                                      fit: BoxFit.cover,
+                                            borderRadius:
+                                                BorderRadius.circular(20)),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: <Widget>[
+                                            Container(
+                                              padding: EdgeInsets.all(10),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: <Widget>[
+                                                  Center(
+                                                    child: Text(
+                                                      '${city?.weatherCurrent.nhietdo}' +
+                                                          "℃",
+                                                      // bỏ data nhiệt độ vào đây
+                                                      style: const TextStyle(
+                                                          color: Colors.black,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontFamily:
+                                                              'flutterfonts',
+                                                          fontSize: 40),
                                                     ),
                                                   ),
-                                                ),
-                                                Text('data',
-                                                  // bỏ dữ liệu mô tả vào đây, giống kiểu trời mưa, hay nắng hay mây
-                                                  style: Theme
-                                                      .of(context)
-                                                      .textTheme
-                                                      .caption
-                                                      ?.copyWith(
-                                                      fontSize: 14,
-                                                      fontWeight: FontWeight.bold,
-                                                      color: Colors.black54,
-                                                      fontFamily: 'flutterfont'
+                                                  Center(
+                                                    child: Text(
+                                                      '${city?.cityName}',
+                                                      // bỏ data thành phố vào đây
+                                                      style: const TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 18,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontFamily:
+                                                              'flutterfonts'),
+                                                    ),
                                                   ),
-                                                ),
-                                              ],
+                                                  Center(
+                                                    child: Text(
+                                                      formattedDate,
+                                                      style: const TextStyle(
+                                                          color: Colors.black54,
+                                                          fontSize: 14,
+                                                          fontFamily:
+                                                              'flutterfonts'),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
-                                          ),
+                                            const Divider(),
+                                            Container(
+                                              padding: EdgeInsets.all(20),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: <Widget>[
+                                                  WeatherItem(
+                                                      value: '${city
+                                                          ?.weatherCurrent.gio}',
+                                                      unit: "Kmh",
+                                                      imageUrl:
+                                                          "lib/Input/windspeed.png"),
+                                                  WeatherItem(
+                                                      value: '${city
+                                                          ?.weatherCurrent.doam}',
+                                                      unit: "%",
+                                                      imageUrl:
+                                                          "lib/Input/humidity.png"),
+                                                  WeatherItem(
+                                                      value: '${city
+                                                          .weatherCurrent
+                                                          .luongmua}',
+                                                      unit: "mm",
+                                                      imageUrl:
+                                                          "lib/Input/rain.png"),
+                                                ],
+                                              ),
+                                            ),
+                                            Container(
+                                              padding: EdgeInsets.only(
+                                                  top: 20,
+                                                  bottom: 20,
+                                                  right: 40,
+                                                  left: 40),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: <Widget>[
+                                                  WeatherItem(
+                                                      value: city
+                                                          ?.weatherCurrent
+                                                          .khongkhi,
+                                                      unit: "",
+                                                      imageUrl:
+                                                          "lib/Input/air.png"),
+                                                  Column(
+
+                                                    children: <Widget>[
+                                                      Container(
+                                                        height: 40,
+                                                        width: 40,
+                                                        decoration: BoxDecoration(
+                                                          color: Colors.transparent,
+                                                          borderRadius: BorderRadius.circular(15),
+                                                        ),
+                                                        child: Image.network(
+                                                          'https:${city?.weatherCurrent.icon}',
+                                                          fit: BoxFit.fill,
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 8.0,
+                                                      ),
+                                                      Text(city
+                                                          ?.weatherCurrent
+                                                          .tinhtrang, //data gió
+                                                        style: Theme
+                                                            .of(context)
+                                                            .textTheme
+                                                            .caption
+                                                            ?.copyWith(
+                                                            fontSize: 18,
+                                                            fontWeight: FontWeight.bold,
+                                                            color: Colors.black54,
+                                                            fontFamily: 'flutterfont'
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      );
-                                    },
-                                    separatorBuilder: (BuildContext context,
-                                        index) =>
-                                        VerticalDivider(
-                                          color: Colors.transparent,
-                                          width: 5,
-                                        ),
-                                    itemCount: 10 // bỏ data số lượng kiểu length của mảng dữ liệu thời tiết nhiệt độ
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
-
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
+                  Expanded(
+                    flex: 2,
+                    child: Stack(
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 15),
+                          child: Container(
+                            padding: EdgeInsets.only(top: 330),
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Container(
+                                    padding: EdgeInsets.all(10),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          child: Text(
+                                            'today'.toUpperCase(),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .caption
+                                                ?.copyWith(
+                                                    fontSize: 16,
+                                                    fontFamily: 'flutterfonts',
+                                                    color: Colors.black,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                          ),
+                                        ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(builder: (_)=> DetailPage(cityData: city,))); //this will open forecast screen;
+                                          },
+                                          child: Container(
+                                            child: Text(
+                                              'Forecasts'.toUpperCase(),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .caption
+                                                  ?.copyWith(
+                                                      fontSize: 16,
+                                                      fontFamily:
+                                                          'flutterfonts',
+                                                      color: Colors.blue,
+                                                      decoration: TextDecoration
+                                                          .underline,
+                                                      decorationThickness: 3.0,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+
+                                  Container(
+                                    height: 140,
+                                    padding: EdgeInsets.only(top: 15),
+                                    child: ListView.separated(
+                                        physics: BouncingScrollPhysics(),
+                                        scrollDirection: Axis.horizontal,
+                                        itemBuilder:
+                                            (BuildContext context, index) {
+                                          return Container(
+                                            width: 100,
+                                            height: 150,
+                                            child: Card(
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(15),
+                                              ),
+                                              child: Container(
+                                                padding:
+                                                    const EdgeInsets.all(10),
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      city?.weatherHour[index]
+                                                          .thoigian, // bỏ dữ liệu giờ
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .caption
+                                                          ?.copyWith(
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color:
+                                                                  Colors.black,
+                                                              fontFamily:
+                                                                  'flutterfont'),
+                                                    ),
+                                                    Image.network(
+                                                      'https:${city?.weatherHour[index].icon}',
+                                                      width: 50,
+                                                      height: 50,
+                                                      fit: BoxFit.fill,
+                                                    ),
+                                                    Text(
+                                                      '${city?.weatherHour[index].nhietdo}℃',
+                                                      // bỏ dữ liệu mô tả vào đây, giống kiểu trời mưa, hay nắng hay mây
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .caption
+                                                          ?.copyWith(
+                                                              fontSize: 16,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color:
+                                                                  Colors.black,
+                                                              fontFamily:
+                                                                  'flutterfont'),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        separatorBuilder:
+                                            (BuildContext context, index) =>
+                                                VerticalDivider(
+                                                  color: Colors.transparent,
+                                                  width: 5,
+                                                ),
+                                        itemCount: city.weatherHour
+                                            .length // bỏ data số lượng kiểu length của mảng dữ liệu thời tiết nhiệt độ
+                                        ),
+                                  ),
+
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
-              ),
-              ),
-            ],
-      )
-    );
+              ));
   }
 
   @override
   void onLoadCityWeatherComplete(CityWeather cityWeather, bool isLoading) {
+    _incrementCounter(cityWeather.cityName, cityWeather.weatherCurrent.icon, cityWeather.weatherCurrent.nhietdo.toInt().toString());
     setState(() {
       city = cityWeather;
       _isLoading = isLoading;
-      _historyInforPresenter.loadAddHistory('${city?.cityName}', '${city?.countryName}');
+      _historyInforPresenter.loadAddHistory(
+          '${city?.cityName}', '${city?.countryName}');
     });
   }
 
@@ -728,7 +540,6 @@ class _MyHomePageState extends State<MyHomePage> implements CityWeatherViewContr
   @override
   void onLoadAddHistory() {
     _historyInforPresenter.loadAllHistory();
-    // print(historys);
   }
 
   @override

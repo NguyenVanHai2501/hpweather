@@ -8,7 +8,7 @@ import '../Helper/createWeatherCity.dart';
 class CityWeatherService {
   var createWeather = CreateWeatherCity();
   dynamic fetchData(var city) async {
-    var uricall = Uri.parse("http://api.weatherapi.com/v1/forecast.json?key=1c72166aeb6549f8bac112855231303&q=$city&days=7&aqi=yes&alerts=yes");
+    var uricall = Uri.parse("http://api.weatherapi.com/v1/forecast.json?key=126a1125da7b4377839214452231404&q=$city&days=7&aqi=yes&alerts=yes");
     var response = await http.get(uricall);
     var body = jsonDecode(response.body)?? 'No data';
     final data = Map<String, dynamic>.from(body);
@@ -16,7 +16,7 @@ class CityWeatherService {
   }
 
   Future<CityWeather> getCityData(var city_name) async {
-    var uricall = Uri.parse("http://api.weatherapi.com/v1/forecast.json?key=1c72166aeb6549f8bac112855231303&q=$city_name&days=7&aqi=yes&alerts=yes");
+    var uricall = Uri.parse("http://api.weatherapi.com/v1/forecast.json?key=126a1125da7b4377839214452231404&q=$city_name&days=7&aqi=yes&alerts=yes");
     var response = await http.get(uricall);
     var body = jsonDecode(response.body)?? 'No data';
     final weatherData = Map<String, dynamic>.from(body);

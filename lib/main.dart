@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
           gifPath: 'lib/Input/weather-icon-gif-23.gif',
           gifWidth: 300,
           gifHeight: 300,
-          defaultNextScreen: const DetailPage(),
+          defaultNextScreen: const MyHomePage(),
           backgroundColor: Colors.white,
           duration: const Duration(milliseconds: 4000),
 

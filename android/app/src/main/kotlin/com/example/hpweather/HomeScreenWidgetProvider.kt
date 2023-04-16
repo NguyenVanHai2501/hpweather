@@ -39,13 +39,12 @@ class HomeScreenWidgetProvider : HomeWidgetProvider() {
             val icon = widgetData.getString("_icon", "")
             val city = widgetData.getString("_cityName", "")
             val temp = widgetData.getString("_temp", "")
-            println(city)
-            println(temp)
+            println(icon)
 
             views.setTextViewText(R.id.cityName, city)
             views.setTextViewText(R.id.temp, temp)
             GlobalScope.launch {
-                val bitmap = icon?.let { loadImageFromUrl("https://www.emojimeaning.com/img/img-apple-160/1f921.png") }
+                val bitmap = icon?.let { loadImageFromUrl("https:" + icon) }
                 withContext(Dispatchers.Main) {
                     views.setImageViewBitmap(R.id.image_icon, bitmap)
                     appWidgetManager.updateAppWidget(widgetId, views)
