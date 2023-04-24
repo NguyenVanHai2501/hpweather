@@ -14,6 +14,7 @@ class CityWeatherPresenter extends Presenter<CityWeatherViewContract>{
   void loadCityWeather(String cityName) {
     cityName = TiengViet.parse(cityName);
     cityWeatherService.getCityData(cityName).then((cityWeather) {
+
       getView().onLoadCityWeatherComplete(cityWeather, false);
     }).catchError((e) {
       print(e);

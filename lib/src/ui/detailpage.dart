@@ -20,6 +20,8 @@ class _DetailPageState extends State<DetailPage> {
     dynamic city = widget.cityData;
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('EEEE, MMMM d, y').format(now);
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
@@ -46,22 +48,17 @@ class _DetailPageState extends State<DetailPage> {
                 child: Stack(
                   children: <Widget>[
                     Align(
-                      alignment: const Alignment(0.0, 0.6),
+                      alignment: Alignment.center,
                       child: SizedBox(
-                        height: 10,
-                        // width: 10,
+
                         child: OverflowBox(
-                          minWidth: 0.0,
-                          maxWidth: MediaQuery.of(context).size.width,
-                          minHeight: 0.0,
-                          maxHeight: (MediaQuery.of(context).size.height / 1.5),
+                          maxWidth: screenWidth,
+                          maxHeight: screenHeight*0.8 ,
                           child: Stack(
                             children: <Widget>[
                               Container(
-                                // padding: const EdgeInsets.symmetric(
-                                //     horizontal: 16.8, vertical: 50),
-                                padding: const EdgeInsets.only(
-                                    top: 180, right: 20, left: 20, bottom: 20),
+                                padding: EdgeInsets.only(
+                                    top: screenHeight*2/5, right: 20, left: 20),
                                 width: double.infinity,
                                 height: double.infinity,
                                 child: Card(
@@ -184,7 +181,7 @@ class _DetailPageState extends State<DetailPage> {
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 15),
                     child: Container(
-                      padding: EdgeInsets.only(top: 250),
+                      padding: EdgeInsets.only(top: screenHeight*0.27),
                       child: Container(
                         // height: ,
                         padding: EdgeInsets.only(top: 15),

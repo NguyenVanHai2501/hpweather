@@ -29,10 +29,10 @@ class _MyHomePageState extends State<MyHomePage>
   dynamic temp = "";
   dynamic cityName = "";
   dynamic icon = "";
+  String message = "";
 
   late Timer _timer;
   int _counter = 0;
-
   void loadData() async {
     await HomeWidget.getWidgetData<String>('_cityName', defaultValue: "")
         .then((value) {
@@ -103,6 +103,8 @@ class _MyHomePageState extends State<MyHomePage>
   Widget build(BuildContext context) {
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('EEEE, MMMM d, y').format(now);
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: _isLoading
@@ -132,8 +134,8 @@ class _MyHomePageState extends State<MyHomePage>
                       child: Stack(
                         children: <Widget>[
                           Container(
-                            padding: const EdgeInsets.only(
-                              top: 80,
+                            padding: EdgeInsets.only(
+                              top: screenHeight*0.1,
                               left: 20,
                               right: 20,
                             ),
@@ -169,26 +171,19 @@ class _MyHomePageState extends State<MyHomePage>
                             ),
                           ),
                           Align(
-                            alignment: const Alignment(0.0, 1.27),
-                            child: SizedBox(
-                              height: 10,
-                              // width: 10,
-                              child: OverflowBox(
-                                minWidth: 0.0,
-                                maxWidth: MediaQuery.of(context).size.width,
-                                minHeight: 0.0,
-                                maxHeight:
-                                    (MediaQuery.of(context).size.height / 1.4),
-                                child: Stack(
-                                  children: <Widget>[
+                            alignment: Alignment.center,
+                            child: OverflowBox(
+                                maxWidth: screenWidth,
+                                maxHeight: screenHeight*1.105 > 970 ? 970 : screenHeight*1.105,
+                                child:
                                     Container(
                                       // padding: const EdgeInsets.symmetric(
                                       //     horizontal: 16.8, vertical: 50),
                                       padding: EdgeInsets.only(
-                                          top: 180,
+                                          top: screenHeight*3/5,
                                           right: 20,
                                           left: 20,
-                                          bottom: 20),
+                                          bottom: 0),
                                       width: double.infinity,
                                       height: double.infinity,
                                       child: Card(
@@ -202,10 +197,12 @@ class _MyHomePageState extends State<MyHomePage>
                                               CrossAxisAlignment.center,
                                           children: <Widget>[
                                             Container(
-                                              padding: EdgeInsets.all(10),
+                                              padding: const EdgeInsets.all(10),
+                                              height: screenHeight*2.7/16 < 140 ? 140 : screenHeight*2.7/16,
                                               child: Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
+                                                mainAxisAlignment: MainAxisAlignment.spaceAround,
                                                 children: <Widget>[
                                                   Center(
                                                     child: Text(
@@ -249,7 +246,7 @@ class _MyHomePageState extends State<MyHomePage>
                                             ),
                                             const Divider(),
                                             Container(
-                                              padding: EdgeInsets.all(20),
+                                              padding: const EdgeInsets.all(20),
                                               child: Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment
@@ -271,7 +268,7 @@ class _MyHomePageState extends State<MyHomePage>
                                                           "lib/Input/humidity.png"),
                                                   WeatherItem(
                                                       value: '${city
-                                                          .weatherCurrent
+                                                          ?.weatherCurrent
                                                           .luongmua}',
                                                       unit: "mm",
                                                       imageUrl:
@@ -280,7 +277,7 @@ class _MyHomePageState extends State<MyHomePage>
                                               ),
                                             ),
                                             Container(
-                                              padding: EdgeInsets.only(
+                                              padding: const EdgeInsets.only(
                                                   top: 20,
                                                   bottom: 20,
                                                   right: 40,
@@ -317,19 +314,29 @@ class _MyHomePageState extends State<MyHomePage>
                                                       const SizedBox(
                                                         height: 8.0,
                                                       ),
-                                                      Text(city
-                                                          ?.weatherCurrent
-                                                          .tinhtrang, //data gió
-                                                        style: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .caption
-                                                            ?.copyWith(
-                                                            fontSize: 18,
-                                                            fontWeight: FontWeight.bold,
-                                                            color: Colors.black54,
-                                                            fontFamily: 'flutterfont'
+                                                      Container(
+                                                        constraints: const BoxConstraints(
+                                                          maxWidth: 180,
                                                         ),
+                                                        child:
+                                                          Text(
+                                                              city
+                                                                  ?.weatherCurrent
+                                                                  .tinhtrang, //data gió
+                                                            style: Theme
+                                                                .of(context)
+                                                                .textTheme
+                                                                .caption
+                                                                ?.copyWith(
+                                                                fontSize: 18,
+                                                                fontWeight: FontWeight.bold,
+                                                                color: Colors.black54,
+                                                                fontFamily: 'flutterfont',
+                                                                overflow: TextOverflow.ellipsis
+                                                            ),
+
+                                                          ),
+
                                                       ),
                                                     ],
                                                   ),
@@ -340,10 +347,8 @@ class _MyHomePageState extends State<MyHomePage>
                                         ),
                                       ),
                                     ),
-                                  ],
-                                ),
                               ),
-                            ),
+
                           ),
                         ],
                       ),
@@ -356,7 +361,7 @@ class _MyHomePageState extends State<MyHomePage>
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 15),
                           child: Container(
-                            padding: EdgeInsets.only(top: 330),
+                            padding: EdgeInsets.only(top: screenHeight*0.4),
                             child: Align(
                               alignment: Alignment.topLeft,
                               child: Column(
@@ -487,7 +492,7 @@ class _MyHomePageState extends State<MyHomePage>
                                                   color: Colors.transparent,
                                                   width: 5,
                                                 ),
-                                        itemCount: city.weatherHour
+                                        itemCount: city?.weatherHour
                                             .length // bỏ data số lượng kiểu length của mảng dữ liệu thời tiết nhiệt độ
                                         ),
                                   ),
@@ -504,15 +509,48 @@ class _MyHomePageState extends State<MyHomePage>
               ));
   }
 
+  void showAlertDialog(BuildContext context) {
+    AlertDialog alert = AlertDialog(
+      content: Text(message),
+
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        Future.delayed(Duration(seconds: 1), () {
+          Navigator.of(context).pop(); // đóng dialog sau 2 giây
+        });
+        return alert;
+      },
+    );
+  }
   @override
-  void onLoadCityWeatherComplete(CityWeather cityWeather, bool isLoading) {
-    _incrementCounter(cityWeather.cityName, cityWeather.weatherCurrent.icon, cityWeather.weatherCurrent.nhietdo.toInt().toString());
-    setState(() {
-      city = cityWeather;
-      _isLoading = isLoading;
-      _historyInforPresenter.loadAddHistory(
-          '${city?.cityName}', '${city?.countryName}');
-    });
+  void onLoadCityWeatherComplete(CityWeather? cityWeather, bool isLoading) {
+    if (cityWeather != null) {
+      _incrementCounter(cityWeather?.cityName, cityWeather?.weatherCurrent.icon, cityWeather!.weatherCurrent.nhietdo.toInt().toString());
+      setState(() {
+        message = "";
+        city = cityWeather;
+        _historyInforPresenter.loadAddHistory(
+            '${city?.cityName}', '${city?.countryName}');
+        _isLoading = isLoading;
+
+      });
+    } else {
+      if (city != null) {
+        setState(() {
+          message = "not found";
+          showAlertDialog(context);
+        });
+      } else {
+        message = "Can't load location";
+        _cityWeatherPresenter.loadCityWeather("Quang Ninh");
+        showAlertDialog(context);
+      }
+
+      print(message);
+    }
   }
 
   @override
