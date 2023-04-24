@@ -15,7 +15,12 @@ class CityWeatherPresenter extends Presenter<CityWeatherViewContract>{
     cityName = TiengViet.parse(cityName);
     cityWeatherService.getCityData(cityName).then((cityWeather) {
       getView().onLoadCityWeatherComplete(cityWeather, false);
-    }).catchError((e) {
+    })
+     .timeout(Duration(seconds: 3), onTimeout: () {
+      // loadCityWeather("Ha Noi");
+      print("time out");
+    })
+    .catchError((e) {
       print(e);
     });
   }
@@ -23,7 +28,12 @@ class CityWeatherPresenter extends Presenter<CityWeatherViewContract>{
   void loadCityWeatherFromLocation () {
     locationInfor.getCurrentLocation().then((cityAddress) {
       loadCityWeather(cityAddress);
-    }).catchError((e) {
+    })
+    .timeout(Duration(seconds: 5), onTimeout: () {
+      print('get location time out');
+      loadCityWeather("Ha Noi");
+    })
+    .catchError((e) {
       print(e);
     });
   }

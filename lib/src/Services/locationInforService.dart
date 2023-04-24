@@ -15,7 +15,7 @@ class LocationInfor {
     } catch(e) {
       print(e);
     }
-    String currentAddress = "Quảng Ninh";
+    String currentAddress = "Hà Nội";
     await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
         .then((Position position) async {
       //Pass the lat and long to the function
@@ -34,9 +34,8 @@ class LocationInfor {
       List<Placemark> p = await placemarkFromCoordinates(latitude, longitude);
 
       Placemark place = p[0];
-
       var currentAddress = "${place.administrativeArea}";
-
+      print(currentAddress);
       return currentAddress;
 
     } catch (e) {

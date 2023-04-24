@@ -18,7 +18,6 @@ class CreateWeatherCity {
       var image = setImage(null, tinhtrang, nhietdo);
       weatherDay.add(Weather(icon: icon, tinhtrang: tinhtrang, nhietdo: nhietdo, gio: gio, doam: doam, luongmua: luongmua, khongkhi: khongkhi, thoigian: thoigian, image: image));
     }
-
     return weatherDay;
   }
 
@@ -34,7 +33,7 @@ class CreateWeatherCity {
       var doam = o['humidity'];
       var luongmua = o['precip_mm'];
       var khongkhi = "null";//getAirQuality(o['day']['air_quality']['pm2_5']);
-      var thoigian = o['time'].toString().substring(11);
+      var thoigian = o['time'].substring(11);
 
       var image = setImage(null, tinhtrang, nhietdo);
       weatherHour.add(Weather(icon: icon, tinhtrang: tinhtrang, nhietdo: nhietdo, gio: gio, doam: doam, luongmua: luongmua, khongkhi: khongkhi, thoigian: thoigian, image: image));
@@ -45,13 +44,13 @@ class CreateWeatherCity {
 
   dynamic setWeatherCurrent(Map<String, dynamic> data) {
     var icon = data['current']['condition']['icon'];
-    var tinhtrang = data['current']['condition']['text'].toString();
+    var tinhtrang = data['current']['condition']['text'];
     var nhietdo = data['current']['temp_c'];
     var gio = data['current']['wind_kph'];
     var doam = data['current']['humidity'];
     var luongmua = data['current']['precip_mm'];
     var khongkhi = getAirQuality(data['current']['air_quality']['pm2_5']);
-    var thoigian = data['current']['last_updated'].toString();
+    var thoigian = data['current']['last_updated'];
 
     var image = setImage(thoigian, tinhtrang, nhietdo);
 
@@ -63,16 +62,16 @@ class CreateWeatherCity {
     if (PM25 == null) {
       return "No Forecast";
     }
-    String result = "Hazardous";
+    String result = "Nguy hại";
     double air = PM25;
     if (air <= 12) {
-      result = "Good";
+      result = "Tốt";
     } else if (air < 35.5){
-      result = "Moderate";
+      result = "Trung bình";
     } else if (air <= 55.5){
-      result = "Unhealthy for Sensitive Groups";
+      result = "Kém";
     } else if (air < 35.5){
-      result = "Unhealthy";
+      result = "Xấu";
     }
     return result;
   }
