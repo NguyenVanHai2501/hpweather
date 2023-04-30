@@ -69,40 +69,49 @@ class _DetailPageState extends State<DetailPage> {
                                   child: Stack(
                                     clipBehavior: Clip.none,
                                     children: [
-                                      Container(
-                                          padding: const EdgeInsets.only(
-                                               left: 20),
-                                          child: Column(
-                                            children: <Widget>[
-                                              Container(
-                                                height: 150,
-                                                width: 150,
-                                                decoration: BoxDecoration(
-                                                  color: Colors.transparent,
-                                                  borderRadius:
-                                                      BorderRadius.circular(15),
-                                                ),
-                                                child: Image.network(
-                                                  'https:${city?.weatherCurrent.icon}',
-                                                  fit: BoxFit.fill,
-                                                ),
+                                      Column(
+                                        children: <Widget>[
+                                          Container(
+                                            height: 150,
+                                            width: 150,
+                                            decoration: BoxDecoration(
+                                              color: Colors.transparent,
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                            ),
+                                            child: Image.network(
+                                              'https:${city?.weatherCurrent.icon}',
+                                              fit: BoxFit.fill,
+                                            ),
+                                          ),
+                                          Container(
+                                            padding: const EdgeInsets.only(
+                                                left: 20),
+                                            constraints: const BoxConstraints(
+                                              maxWidth: 180,
+                                            ),
+                                            child:
+                                            Text(
+                                              city
+                                                  ?.weatherCurrent
+                                                  .tinhtrang, //data gió
+                                              style: Theme
+                                                  .of(context)
+                                                  .textTheme
+                                                  .caption
+                                                  ?.copyWith(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black54,
+                                                  fontFamily: 'flutterfont',
+                                                  overflow: TextOverflow.ellipsis
                                               ),
-                                              Text(
-                                                city?.weatherCurrent
-                                                    .tinhtrang, //data gió
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .caption
-                                                    ?.copyWith(
-                                                        fontSize: 18,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.black54,
-                                                        fontFamily:
-                                                            'flutterfont'),
-                                              ),
-                                            ],
-                                          )),
+
+                                            ),
+
+                                          ),
+                                        ],
+                                      ),
                                       Positioned(
                                         bottom: 60,
                                         left: 20,
