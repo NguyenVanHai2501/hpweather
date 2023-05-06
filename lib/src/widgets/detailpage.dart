@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:weather/src/ui/weatherItem.dart';
+import 'package:weather/src/widgets/weatherItem.dart';
 
 class DetailPage extends StatefulWidget {
   final cityData;
@@ -113,7 +113,7 @@ class _DetailPageState extends State<DetailPage> {
                                         ],
                                       ),
                                       Positioned(
-                                        bottom: 60,
+                                        bottom: 20,
                                         left: 20,
                                         child: Container(
                                           width: size.width * .8,
@@ -146,7 +146,7 @@ class _DetailPageState extends State<DetailPage> {
                                         ),
                                       ),
                                       Positioned(
-                                        top: 20,
+                                        top: 40,
                                         right: 20,
                                         child: Row(
                                           crossAxisAlignment:

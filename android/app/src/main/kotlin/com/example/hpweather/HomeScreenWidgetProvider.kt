@@ -19,6 +19,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.net.URL
 
+import android.os.Handler
+import android.os.Looper
+
 class HomeScreenWidgetProvider : HomeWidgetProvider() {
     override fun onUpdate(
         context: Context,
@@ -26,33 +29,45 @@ class HomeScreenWidgetProvider : HomeWidgetProvider() {
         appWidgetIds: IntArray,
         widgetData: SharedPreferences
     ) {
-        appWidgetIds.forEach { widgetId ->
-            val views = RemoteViews(context.packageName, R.layout.widget_layout)
+        var tem = 1
+        val handler = Handler(Looper.getMainLooper())
+        val run = object : Runnable {
+            override fun run() {
+                appWidgetIds.forEach { widgetId ->
+                    val views = RemoteViews(context.packageName, R.layout.widget_layout)
 
-            // Open App on Widget Click
-            val pendingIntent = HomeWidgetLaunchIntent.getActivity(
-                context,
-                MainActivity::class.java
-            )
-            views.setOnClickPendingIntent(R.id.widget_root, pendingIntent)
+                    // Open App on Widget Click
+                    val pendingIntent = HomeWidgetLaunchIntent.getActivity(
+                        context,
+                        MainActivity::class.java
+                    )
+                    views.setOnClickPendingIntent(R.id.widget_root, pendingIntent)
 
-            val icon = widgetData.getString("_icon", "")
-            val city = widgetData.getString("_cityName", "")
-            val temp = widgetData.getString("_temp", "")
-            println(icon)
+                    val icon = widgetData.getString("_icon", "")
+                    val city = widgetData.getString("_cityName", "")
+                    val temp = widgetData.getString("_temp", "")
 
-            views.setTextViewText(R.id.cityName, city)
-            views.setTextViewText(R.id.temp, temp)
-            GlobalScope.launch {
-                val bitmap = icon?.let { loadImageFromUrl("https:" + icon) }
-                withContext(Dispatchers.Main) {
-                    views.setImageViewBitmap(R.id.image_icon, bitmap)
+                    tem++
+
+                    views.setTextViewText(R.id.temp, tem.toString())
+                    views.setTextViewText(R.id.cityName, city)
+                    GlobalScope.launch {
+                        val bitmap = icon?.let { loadImageFromUrl("https:" + icon) }
+                        withContext(Dispatchers.Main) {
+                            views.setImageViewBitmap(R.id.image_icon, bitmap)
+                            appWidgetManager.updateAppWidget(widgetId, views)
+                        }
+                    }
                     appWidgetManager.updateAppWidget(widgetId, views)
                 }
+                handler.postDelayed(this, 4000)// 4 seconds
             }
-            appWidgetManager.updateAppWidget(widgetId, views)
+
         }
+        handler.post(run)
+
     }
+
 
     private suspend fun loadImageFromUrl(imageUrl: String): Bitmap? {
         return try {
