@@ -8,7 +8,8 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:home_widget/home_widget.dart';
 import 'package:weather/src/screens/homescreen.dart';
 
-int x =0;
+String phoneID = "";
+String platform = "";
 
 void main() async{
 
@@ -19,10 +20,14 @@ void main() async{
 // Lấy thông tin của thiết bị đang chạy
   if (Platform.isAndroid) {
     AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+    phoneID = androidInfo.id;
+    platform = "android";
     print('Device id: ${androidInfo.id}');
     print('Android version: ${androidInfo.version.release}');
   } else if (Platform.isIOS) {
     IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+    phoneID = iosInfo.identifierForVendor;
+    platform = "ios";
     print('Device name: ${iosInfo.name}');
     print('iOS version: ${iosInfo.systemVersion}');
   }
@@ -31,21 +36,6 @@ void main() async{
 
 // Called when Doing Background Work initiated from Widget
 Future<void> backgroundCallback(Uri? uri) async {
-
-  String cityName = "HN";
-  String icon = "CBCBCB";
-  int temp = 0;
-  Timer.periodic(Duration(seconds: 2), (timer) {
-    temp++;
-  });
-
-  print(temp.toString());
-  await HomeWidget.saveWidgetData<String>('_cityName', cityName);
-  await HomeWidget.saveWidgetData<String>('_icon', icon);
-  await HomeWidget.saveWidgetData<String>('_temp', temp.toString());
-
-  await HomeWidget.updateWidget(
-      name: 'HomeScreenWidgetProvider', iOSName: 'HomeScreenWidgetProvider');
 }
 
 class MyApp extends StatelessWidget {
@@ -63,7 +53,7 @@ class MyApp extends StatelessWidget {
           gifPath: 'lib/Input/weather-icon-gif-23.gif',
           gifWidth: 300,
           gifHeight: 300,
-          defaultNextScreen: const MyHomePage(),
+          defaultNextScreen: MyHomePage(phoneID: phoneID, platfrom: platform,),
           backgroundColor: Colors.white,
           duration: const Duration(milliseconds: 4000),
 

@@ -1,14 +1,6 @@
-import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:home_widget/home_widget.dart';
 import 'package:intl/intl.dart';
-import 'package:weather/src/Contract/cityWeatherViewContact.dart';
-import 'package:weather/src/Contract/historyInforViewContract.dart';
-import 'package:weather/src/Model/cityWeatherModel.dart';
-import 'package:weather/src/Model/historyInforModel.dart';
-import 'package:weather/src/Presenter/cityWeatherPresenter.dart';
-import 'package:weather/src/Presenter/historyInforPresenter.dart';
 import 'package:weather/src/screens/homescreen.dart';
 import 'package:weather/src/widgets/detailpage.dart';
 import 'package:weather/src/widgets/weatherItem.dart';
@@ -177,7 +169,7 @@ class _SingleHomeWidgetState extends State<SingleHomeWidget> {
                                       ),
                                       Container(
                                         constraints: const BoxConstraints(
-                                          maxWidth: 180,
+                                          maxWidth: 170,
                                         ),
                                         child: Text(
                                           city?.weatherCurrent

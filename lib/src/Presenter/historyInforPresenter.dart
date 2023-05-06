@@ -6,8 +6,8 @@ import 'package:weather/src/Services/historyInforService.dart';
 class HistoryInforPresenter extends Presenter<HistoryInforViewContract> {
   HistoryInforService historyInforService = HistoryInforService();
 
-  void loadAllHistory() {
-    historyInforService.getAllHistory().then((allHistory) {
+  void loadAllHistory(String phoneID) {
+    historyInforService.getHistoryByCountry(phoneID).then((allHistory) {
       getView().onLoadAllHistoryComplete(allHistory);
     });
   }

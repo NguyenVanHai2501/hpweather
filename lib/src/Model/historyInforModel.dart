@@ -12,10 +12,10 @@ class HistoryInfor {
 
   factory HistoryInfor.fromJson(Map<String, dynamic> json) {
     return HistoryInfor(
-        id: json["id"],
-        city: json["city"],
-        country: json["country"],
-        last_update: json['last_update']
+        id: json["id"] ?? "",
+        city: json["city"] ?? "",
+        country: json["country"] ?? "",
+        last_update: json['last_update'] ?? ""
     );
 
   }
