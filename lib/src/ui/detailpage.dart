@@ -50,16 +50,15 @@ class _DetailPageState extends State<DetailPage> {
                     Align(
                       alignment: Alignment.center,
                       child: SizedBox(
+
                         child: OverflowBox(
                           maxWidth: screenWidth,
-                          maxHeight: screenHeight * 0.8 < 660 ? 660 : screenHeight * 0.8,
+                          maxHeight: screenHeight*0.8 ,
                           child: Stack(
                             children: <Widget>[
                               Container(
-                                // padding: const EdgeInsets.symmetric(
-                                //     horizontal: 16.8, vertical: 50),
                                 padding: EdgeInsets.only(
-                                    top: screenHeight * 2 / 5, right: 20, left: 20, bottom: 20),
+                                    top: screenHeight*2/5, right: 20, left: 20),
                                 width: double.infinity,
                                 height: double.infinity,
                                 child: Card(
@@ -70,40 +69,47 @@ class _DetailPageState extends State<DetailPage> {
                                   child: Stack(
                                     clipBehavior: Clip.none,
                                     children: [
-                                      Container(
-                                          padding: const EdgeInsets.only(
+                                      Column(
+                                        children: <Widget>[
+                                          Container(
+                                            height: 150,
+                                            width: 150,
+                                            decoration: BoxDecoration(
+                                              color: Colors.transparent,
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                            ),
+                                            child: Image.network(
+                                              'https:${city?.weatherCurrent.icon}',
+                                              fit: BoxFit.fill,
+                                            ),
+                                          ),
+                                          Container(
+                                            padding: const EdgeInsets.only(
                                                left: 20),
-                                          child: Column(
-                                            children: <Widget>[
-                                              Container(
-                                                height: 150,
-                                                width: 150,
-                                                decoration: BoxDecoration(
-                                                  color: Colors.transparent,
-                                                  borderRadius:
-                                                      BorderRadius.circular(15),
-                                                ),
-                                                child: Image.network(
-                                                  'https:${city?.weatherCurrent.icon}',
-                                                  fit: BoxFit.fill,
-                                                ),
-                                              ),
-                                              Text(
-                                                city?.weatherCurrent
-                                                    .tinhtrang, //data gió
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .caption
-                                                    ?.copyWith(
-                                                        fontSize: 18,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.black54,
-                                                        fontFamily:
-                                                            'flutterfont'),
-                                              ),
-                                            ],
-                                          )),
+                                            constraints: const BoxConstraints(
+                                              maxWidth: 180,
+                                            ),
+                                            child:
+                                            Text(
+                                            city?.weatherCurrent
+                                                .tinhtrang, //data gió
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .caption
+                                                ?.copyWith(
+                                                    fontSize: 18,
+                                                    fontWeight:
+                                                        FontWeight.bold,
+                                                    color: Colors.black54,
+                                                    fontFamily:
+                                                        'flutterfont'),
+                                                    overflow: TextOverflow.ellipsis
+                                          )
+                                          ),
+                                    
+                                        ],
+                                      ),
                                       Positioned(
                                         bottom: 60,
                                         left: 20,
@@ -182,7 +188,7 @@ class _DetailPageState extends State<DetailPage> {
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 15),
                     child: Container(
-                      padding: EdgeInsets.only(top: screenHeight * .27),
+                      padding: EdgeInsets.only(top: screenHeight*0.27),
                       child: Container(
                         // height: ,
                         padding: EdgeInsets.only(top: 15),

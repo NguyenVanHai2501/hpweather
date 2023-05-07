@@ -11,6 +11,7 @@ import 'package:weather/src/Presenter/cityWeatherPresenter.dart';
 import 'package:weather/src/Presenter/historyInforPresenter.dart';
 import 'package:weather/src/ui/detailpage.dart';
 import 'package:weather/src/ui/weatherItem.dart';
+
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
 
@@ -28,10 +29,10 @@ class _MyHomePageState extends State<MyHomePage>
   dynamic temp = "";
   dynamic cityName = "";
   dynamic icon = "";
-  
+  String message = "";
+
   late Timer _timer;
   int _counter = 0;
-
   void loadData() async {
     await HomeWidget.getWidgetData<String>('_cityName', defaultValue: "")
         .then((value) {
@@ -108,7 +109,6 @@ class _MyHomePageState extends State<MyHomePage>
     String formattedDate = DateFormat('EEEE, MMMM d, y').format(now);
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-    print(screenHeight);
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: _isLoading
@@ -176,13 +176,10 @@ class _MyHomePageState extends State<MyHomePage>
                           ),
                           Align(
                             alignment: Alignment.center,
-                            child: SizedBox(
-                  
-                              child: OverflowBox(
+                            child: OverflowBox(
                                 maxWidth: screenWidth,
                                 maxHeight: screenHeight*1.105 > 970 ? 970 : screenHeight*1.105,
-                                child: Stack(
-                                  children: <Widget>[
+                                child:
                                     Container(
                                       // padding: const EdgeInsets.symmetric(
                                       //     horizontal: 16.8, vertical: 50),
@@ -253,7 +250,7 @@ class _MyHomePageState extends State<MyHomePage>
                                             ),
                                             const Divider(),
                                             Container(
-                                              padding: EdgeInsets.all(20),
+                                              padding: const EdgeInsets.all(20),
                                               child: Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment
@@ -275,7 +272,7 @@ class _MyHomePageState extends State<MyHomePage>
                                                           "lib/Input/humidity.png"),
                                                   WeatherItem(
                                                       value: '${city
-                                                          .weatherCurrent
+                                                          ?.weatherCurrent
                                                           .luongmua}',
                                                       unit: "mm",
                                                       imageUrl:
@@ -284,7 +281,7 @@ class _MyHomePageState extends State<MyHomePage>
                                               ),
                                             ),
                                             Container(
-                                              padding: EdgeInsets.only(
+                                              padding: const EdgeInsets.only(
                                                   top: 20,
                                                   bottom: 20,
                                                   right: 40,
@@ -322,25 +319,29 @@ class _MyHomePageState extends State<MyHomePage>
                                                         height: 8.0,
                                                       ),
                                                       Container(
-                                                        constraints: const BoxConstraints(maxWidth: 180),
-                                                        child: 
-                                                        Text(city
-                                                          ?.weatherCurrent
-                                                          .tinhtrang, //data gió
-                                                        style: Theme
-                                                            .of(context)
-                                                            .textTheme
-                                                            .caption
-                                                            ?.copyWith(
-                                                            fontSize: 18,
-                                                            fontWeight: FontWeight.bold,
-                                                            color: Colors.black54,
-                                                            fontFamily: 'flutterfont',
-                                                            overflow: TextOverflow.ellipsis
+                                                        constraints: const BoxConstraints(
+                                                          maxWidth: 180,
                                                         ),
-                                                      ),
-                                                      ),
+                                                        child:
+                                                          Text(
+                                                              city
+                                                                  ?.weatherCurrent
+                                                                  .tinhtrang, //data gió
+                                                            style: Theme
+                                                                .of(context)
+                                                                .textTheme
+                                                                .caption
+                                                                ?.copyWith(
+                                                                fontSize: 18,
+                                                                fontWeight: FontWeight.bold,
+                                                                color: Colors.black54,
+                                                                fontFamily: 'flutterfont',
+                                                                overflow: TextOverflow.ellipsis
+                                                            ),
 
+                                                          ),
+
+                                                      ),
                                                       
                                                     ],
                                                   ),
@@ -351,10 +352,8 @@ class _MyHomePageState extends State<MyHomePage>
                                         ),
                                       ),
                                     ),
-                                  ],
-                                ),
                               ),
-                            ),
+
                           ),
                         ],
                       ),
@@ -498,7 +497,7 @@ class _MyHomePageState extends State<MyHomePage>
                                                   color: Colors.transparent,
                                                   width: 5,
                                                 ),
-                                        itemCount: city.weatherHour
+                                        itemCount: city?.weatherHour
                                             .length // bỏ data số lượng kiểu length của mảng dữ liệu thời tiết nhiệt độ
                                         ),
                                   ),
@@ -515,15 +514,48 @@ class _MyHomePageState extends State<MyHomePage>
               ));
   }
 
-  @override
-  void onLoadCityWeatherComplete(CityWeather cityWeather, bool isLoading) {
-    // _incrementCounter(cityWeather.cityName, cityWeather.weatherCurrent.icon, cityWeather.weatherCurrent.nhietdo.toInt().toString());
-    setState(() {
-      city = cityWeather;
-      _isLoading = isLoading;
-      _historyInforPresenter.loadAddHistory(
-          '${city?.cityName}', '${city?.countryName}');
-    });
+  void showAlertDialog(BuildContext context) {
+    AlertDialog alert = AlertDialog(
+      content: Text(message),
+
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        Future.delayed(Duration(seconds: 1), () {
+          Navigator.of(context).pop(); // đóng dialog sau 2 giây
+        });
+        return alert;
+      },
+    );
+  }
+  
+  void onLoadCityWeatherComplete(CityWeather? cityWeather, bool isLoading) {
+    if (cityWeather != null) {
+      // _incrementCounter(cityWeather.cityName, cityWeather.weatherCurrent.icon, cityWeather.weatherCurrent.nhietdo.toInt().toString());
+      setState(() {
+        message = "";
+        city = cityWeather;
+        _historyInforPresenter.loadAddHistory(
+            '${city?.cityName}', '${city?.countryName}');
+        _isLoading = isLoading;
+
+      });
+    } else {
+      if (city != null) {
+        setState(() {
+          message = "not found";
+          showAlertDialog(context);
+        });
+      } else {
+        message = "Can't load location";
+        _cityWeatherPresenter.loadCityWeather("Quang Ninh");
+        showAlertDialog(context);
+      }
+
+      print(message);
+    }
   }
 
   @override

@@ -14,11 +14,8 @@ class CityWeatherPresenter extends Presenter<CityWeatherViewContract>{
   void loadCityWeather(String cityName) {
     cityName = TiengViet.parse(cityName);
     cityWeatherService.getCityData(cityName).then((cityWeather) {
+
       getView().onLoadCityWeatherComplete(cityWeather, false);
-    })
-     .timeout(Duration(seconds: 3), onTimeout: () {
-      // loadCityWeather("Ha Noi");
-      print("time out");
     })
     .catchError((e) {
       print(e);
